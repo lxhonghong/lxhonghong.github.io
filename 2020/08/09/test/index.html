@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>test | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="前言在计算机发展初期，每台计算机是串行地执行任务的，如果碰上需要IO的地方，还需要等待长时间的用户IO，后来经过一段时间有了批处理计算机，其可以批量串行地处理用户指令，但本质还是串行，还是不能并发执行。 如何解决并发执行的问题呢?于是引入了进程的概念，每个进程独占一份内存空间，进程是内存分配的最小单位，相互间运行互不干扰且可以相互切换，现在我们所看到的多个进程“同时”在运行，实际上是进程高速切换的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="test">
+<meta property="og:url" content="http://yoursite.com/2020/08/09/test/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="前言在计算机发展初期，每台计算机是串行地执行任务的，如果碰上需要IO的地方，还需要等待长时间的用户IO，后来经过一段时间有了批处理计算机，其可以批量串行地处理用户指令，但本质还是串行，还是不能并发执行。 如何解决并发执行的问题呢?于是引入了进程的概念，每个进程独占一份内存空间，进程是内存分配的最小单位，相互间运行互不干扰且可以相互切换，现在我们所看到的多个进程“同时”在运行，实际上是进程高速切换的">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyAEaNO9orDlINvhbUmLutWB8reypeR3fuE9bdZHhsKBuV2gL6Tj76Uw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpy3mVEA5icptVGRtgRlicD0w6N0NXg9f39urbHNNoPscCsBu0Wo6vruXzw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyTUDfuxszrgzHljnquos4KmbkCXiaKsZEKuwJtic53gaw1WozpKDhwaZw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyx91g1hLwCF5dwDbYThb8woxRsra47X7iaKI5Y8GV9smvEmGGa7Z6M2A/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyPqkydgYKv9R8dNfQZakTCkWn7gxWgd6TlRt420USBXTGU5x81ib54KQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpy2NFeLwrfLNBGz4UOgyN8xYc1EicDXicyfGRslMyNHLpsPcon5rrLuxWQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyYtrCibPOK8PDD8giaBRos2iaibDzaS3VRTDicLYhnia0QvOz0ovGDYRZZ3dg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyw9jjJ07uSDJbxLy7laqvsjLtZrtXP4ANhNczxKfbxzRibN0aPf9BBxQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyuZ1pDQD9sVic83WAUoUlHA2lLgU8ndrLJjFMXFia1JkI4fWkpxmErt1A/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpygbz3GqI4GVGCWFMk1GMib9U9R4MpBAjBlOnWynFe3KpdJK2svfCfU5Q/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyL9UyhVticEWLM0L0BnVoXLwqliaBcJDwmCgZ3sCIvIoOHX6ooT0yEj3w/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyyPemT0EUrvNzazicbjVTOxpDHBCoN2J7r0T30TW3CKWs59t9CAzMHvQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyqpmCjEtIuqoVZIbF59NM8J94Mvw4pOEbYQbDGymzKDX5UFXibAVK57A/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="og:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpy90HcnEVEoaVCicx0DGj6AGicGh7AnibUtXmZbn7NZwEM7Qdiay3VQC0T2A/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+<meta property="article:published_time" content="2020-08-09T08:14:50.000Z">
+<meta property="article:modified_time" content="2020-08-09T08:15:35.163Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyAEaNO9orDlINvhbUmLutWB8reypeR3fuE9bdZHhsKBuV2gL6Tj76Uw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-test" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/08/09/test/" class="article-date">
+  <time datetime="2020-08-09T08:14:50.000Z" itemprop="datePublished">2020-08-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      test
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在计算机发展初期，每台计算机是串行地执行任务的，如果碰上需要IO的地方，还需要等待长时间的用户IO，后来经过一段时间有了批处理计算机，其可以批量串行地处理用户指令，但本质还是串行，还是不能并发执行。</p>
+<p><strong>如何解决并发执行的问题呢?于是引入了进程的概念，每个进程独占一份内存空间，进程是内存分配的最小单位，相互间运行互不干扰且可以相互切换，现在我们所看到的多个进程“同时”在运行，实际上是进程高速切换的效果。</strong></p>
+<p>那么有了线程之后，我们的计算机系统看似已经很完美了，为什么还要进入线程呢？如果一个进程有多个子任务，往往一个进程需要逐个去执行这些子任务，但往往这些子任务是不相互依赖的，可以并发执行，所以需要CPU进行更细粒度的切换。所以就引入了线程的概念，线程隶属于某一个进程，它共享进程的内存资源，相互间切换更快速。</p>
+<h2 id="进程与线程的区别："><a href="#进程与线程的区别：" class="headerlink" title="进程与线程的区别："></a>进程与线程的区别：</h2><ol>
+<li>进程是资源分配的最小单位，线程是CPU调度的最小单位。所有与进程相关的资源，均被记录在PCB中。</li>
+<li>线程隶属于某一个进程，共享所属进程的资源。线程只由堆栈寄存器、程序计数器和TCB构成。</li>
+<li>进程可以看作独立的应用，线程不能看作独立的应用。</li>
+<li>进程有独立的地址空间，相互不影响，而线程只是进程的不同执行路径，如果线程挂了，进程也就挂了。所以多进程的程序比多线程程序健壮，但是切换消耗资源多。</li>
+</ol>
+<h2 id="Java中进程与线程的关系："><a href="#Java中进程与线程的关系：" class="headerlink" title="Java中进程与线程的关系："></a>Java中进程与线程的关系：</h2><ol>
+<li>运行一个程序会产生一个进程，进程至少包含一个线程。</li>
+<li>每个进程对应一个JVM实例，多个线程共享JVM中的堆。</li>
+<li>Java采用单线程编程模型，程序会自动创建主线程 。</li>
+<li>主线程可以创建子线程，原则上要后于子线程完成执行。</li>
+</ol>
+<hr>
+<h2 id="线程的start方法和run方法的区别"><a href="#线程的start方法和run方法的区别" class="headerlink" title="线程的start方法和run方法的区别"></a>线程的start方法和run方法的区别</h2><p><strong>区别</strong></p>
+<p>Java中创建线程的方式有两种，不管使用继承Thread的方式还是实现Runnable接口的方式，都需要重写run方法。调用start方法会创建一个新的线程并启动，run方法只是启动线程后的回调函数，如果调用run方法，那么执行run方法的线程不会是新创建的线程，而如果使用start方法，那么执行run方法的线程就是我们刚刚启动的那个线程。</p>
+<p><strong>程序验证</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Main &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Thread thread &#x3D; new Thread(new SubThread());</span><br><span class="line">        thread.run();</span><br><span class="line">        thread.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class SubThread implements Runnable&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">        System.out.println(&quot;执行本方法的线程:&quot;+Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyAEaNO9orDlINvhbUmLutWB8reypeR3fuE9bdZHhsKBuV2gL6Tj76Uw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<hr>
+<h2 id="Thread和Runnable的关系"><a href="#Thread和Runnable的关系" class="headerlink" title="Thread和Runnable的关系"></a>Thread和Runnable的关系</h2><p><strong>Thread源码</strong></p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpy3mVEA5icptVGRtgRlicD0w6N0NXg9f39urbHNNoPscCsBu0Wo6vruXzw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p><strong>Runnable源码</strong></p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyTUDfuxszrgzHljnquos4KmbkCXiaKsZEKuwJtic53gaw1WozpKDhwaZw/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p><strong>区别</strong></p>
+<p>通过上述源码图，不难看出，Thread是一个类，而Runnable是一个接口，Runnable接口中只有一个没有实现的run方法，可以得知，Runnable并不能独立开启一个线程，而是依赖Thread类去创建线程，执行自己的run方法，去执行相应的业务逻辑，才能让这个类具备多线程的特性。</p>
+<h3 id="使用继承Thread方式和实现Runable接口方式分别创建子线程"><a href="#使用继承Thread方式和实现Runable接口方式分别创建子线程" class="headerlink" title="使用继承Thread方式和实现Runable接口方式分别创建子线程"></a>使用继承Thread方式和实现Runable接口方式分别创建子线程</h3><p><strong>使用继承Thread类方式创建子线程</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public class Main extends Thread&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Main main &#x3D; new Main();</span><br><span class="line">        main.start();</span><br><span class="line">    &#125;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        System.out.println(&quot;通过继承Thread接口方式创建子线程成功,当前线程名：&quot;+Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果:</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyx91g1hLwCF5dwDbYThb8woxRsra47X7iaKI5Y8GV9smvEmGGa7Z6M2A/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p><strong>使用实现Runnable接口方式创建子线程</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Main&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SubThread subThread &#x3D; new SubThread();</span><br><span class="line">        Thread thread &#x3D; new Thread(subThread);</span><br><span class="line">        thread.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class SubThread implements Runnable&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">        System.out.println(&quot;通过实现Runnable接口创建子线程成功，当前线程名:&quot;+Thread.currentThread().getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyPqkydgYKv9R8dNfQZakTCkWn7gxWgd6TlRt420USBXTGU5x81ib54KQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p><strong>使用匿名内部类方式创建子线程</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">public class Main&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Thread thread &#x3D; new Thread(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">                System.out.println(&quot;使用匿名内部类方式创建线程成功,当前线程名:&quot;+Thread.currentThread().getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        thread.start();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpy2NFeLwrfLNBGz4UOgyN8xYc1EicDXicyfGRslMyNHLpsPcon5rrLuxWQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p><strong>关系</strong></p>
+<ol>
+<li>Thread是实现了Runnable接口的类，使得run支持多线程。</li>
+<li>因类的单一继承原则，推荐使用Runnable接口，可以使程序更加灵活。</li>
+</ol>
+<hr>
+<h2 id="如何实现处理多线程的返回值"><a href="#如何实现处理多线程的返回值" class="headerlink" title="如何实现处理多线程的返回值"></a>如何实现处理多线程的返回值</h2><p>通过刚才的学习，我们知道多线程的逻辑需要放到run方法中去执行，而run方法是没有返回值的，那么遇到需要返回值的状况就不好解决，那么如何实现子线程返回值呢？</p>
+<h3 id="主线程等待法"><a href="#主线程等待法" class="headerlink" title="主线程等待法"></a>主线程等待法</h3><p><strong>通过让主线程等待，直到子线程运行完毕为止。</strong></p>
+<p>实现方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public class Main&#123;</span><br><span class="line">    static String str;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Thread thread &#x3D; new Thread(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                str&#x3D;&quot;子线程执行完毕&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        thread.start();</span><br><span class="line">        &#x2F;&#x2F;如果子线程还未对str进行赋值，则一直轮转</span><br><span class="line">        while(str&#x3D;&#x3D;null) &#123;&#125;</span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用Thread中的join-方法"><a href="#使用Thread中的join-方法" class="headerlink" title="使用Thread中的join()方法"></a>使用Thread中的join()方法</h3><p><strong>join()方法可以阻塞当前线程以等待子线程处理完毕。</strong></p>
+<p>实现方式：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class Main&#123;</span><br><span class="line">    static String str;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Thread thread &#x3D; new Thread(new Runnable() &#123;</span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                str&#x3D;&quot;子线程执行完毕&quot;;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        thread.start();</span><br><span class="line">        &#x2F;&#x2F;如果子线程还未对str进行赋值，则一直轮转</span><br><span class="line">        try &#123;</span><br><span class="line">            thread.join();</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            &#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(str);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>join方法能做到比主线程等待法更精准的控制，但是join方法的控制粒度并不够细。</strong>比如，我需要控制子线程将字符串赋一个特定的值时，再执行主线程，这种操作join方法是没有办法做到的。</p>
+<h3 id="通过Callable接口实现：通过FutureTask或者线程池获取"><a href="#通过Callable接口实现：通过FutureTask或者线程池获取" class="headerlink" title="通过Callable接口实现：通过FutureTask或者线程池获取"></a>通过Callable接口实现：通过FutureTask或者线程池获取</h3><p>在JDK1.5之前，线程是没有返回值的，通常程序猿需要获取子线程返回值颇费周折，<strong>现在Java有了自己的返回值线程，即实现了Callable接口的线程，执行了实现Callable接口的线程之后，可以获得一个Future对象，在该对象上调用一个get方法，就可以执行子线程的逻辑并获取返回的Object。</strong></p>
+<p>实现方式1（错误示例）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">public class Main implements Callable&lt;String&gt;&#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String call() throws Exception &#123;</span><br><span class="line">        &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">        String str &#x3D; &quot;我是带返回值的子线程&quot;;</span><br><span class="line">        return str;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Main main &#x3D; new Main();</span><br><span class="line">        try &#123;</span><br><span class="line">            String str &#x3D; main.call();</span><br><span class="line">            System.out.println(str);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            &#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyYtrCibPOK8PDD8giaBRos2iaibDzaS3VRTDicLYhnia0QvOz0ovGDYRZZ3dg/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>实现方式2（使用FutureTask）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">public class Main implements Callable&lt;String&gt;&#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String call() throws Exception &#123;</span><br><span class="line">        &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">        String str &#x3D; &quot;我是带返回值的子线程&quot;;</span><br><span class="line">        return str;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        FutureTask&lt;String&gt; task &#x3D; new FutureTask&lt;String&gt;(new Main());</span><br><span class="line">        new Thread(task).start();</span><br><span class="line">        try &#123;</span><br><span class="line">            if(!task.isDone()) &#123;</span><br><span class="line">                System.out.println(&quot;任务没有执行完成&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(&quot;等待中...&quot;);</span><br><span class="line">            Thread.sleep(3000);</span><br><span class="line">            System.out.println(task.get());</span><br><span class="line"></span><br><span class="line">        &#125; catch (InterruptedException | ExecutionException e) &#123;</span><br><span class="line">            &#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyw9jjJ07uSDJbxLy7laqvsjLtZrtXP4ANhNczxKfbxzRibN0aPf9BBxQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>实现方法3（使用线程池配合Future获取）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">public class Main implements Callable&lt;String&gt;&#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String call() throws Exception &#123;</span><br><span class="line">        &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">        String str &#x3D; &quot;我是带返回值的子线程&quot;;</span><br><span class="line">        return str;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void main(String[] args) throws InterruptedException, ExecutionException &#123;</span><br><span class="line">        ExecutorService newCacheThreadPool &#x3D; Executors.newCachedThreadPool(); </span><br><span class="line">        Future&lt;String&gt; future &#x3D; newCacheThreadPool.submit(new Main());</span><br><span class="line">        if(!future.isDone()) &#123;</span><br><span class="line">            System.out.println(&quot;线程尚未执行结束&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;等待中&quot;);</span><br><span class="line">        Thread.sleep(300);</span><br><span class="line">        System.out.println(future.get());</span><br><span class="line">        newCacheThreadPool.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyuZ1pDQD9sVic83WAUoUlHA2lLgU8ndrLJjFMXFia1JkI4fWkpxmErt1A/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<hr>
+<h2 id="线程的状态"><a href="#线程的状态" class="headerlink" title="线程的状态"></a>线程的状态</h2><p>Java线程主要分为以下六个状态：**新建态（new），运行态（Runnable），无限期等待（Waiting），限期等待（TimeWaiting），阻塞态（Blocked)，结束（Terminated)**。</p>
+<h3 id="新建（new）"><a href="#新建（new）" class="headerlink" title="新建（new）"></a>新建（new）</h3><p>新建态是线程处于已被创建但没有被启动的状态，在该状态下的线程只是被创建出来了，但并没有开始执行其内部逻辑。</p>
+<h3 id="运行（Runnable）"><a href="#运行（Runnable）" class="headerlink" title="运行（Runnable）"></a>运行（Runnable）</h3><p>运行态分为Ready和Running，当线程调用start方法后，并不会立即执行，而是去争夺CPU，当线程没有开始执行时，其状态就是Ready，而当线程获取CPU时间片后，从Ready态转为Running态。</p>
+<h3 id="等待（Waiting）"><a href="#等待（Waiting）" class="headerlink" title="等待（Waiting）"></a>等待（Waiting）</h3><p>处于等待状态的线程不会自动苏醒，而只有等待被其它线程唤醒，在等待状态中该线程不会被CPU分配时间，将一直被阻塞。以下操作会造成线程的等待：</p>
+<ol>
+<li>没有设置timeout参数的Object.wait()方法。</li>
+<li>没有设置timeout参数的Thread.join()方法。</li>
+<li>LockSupport.park()方法（实际上park方法并不是LockSupport提供的，而是在Unsafe中，LockSupport只是对其做了一层封装，可以看我的另一篇博客《锁》，里面对于ReentrantLock的源码解析有提到这个方法）。</li>
+</ol>
+<p>###</p>
+<blockquote>
+<p>锁：<a target="_blank" rel="noopener" href="https://juejin.im/post/5d8da403f265da5b5d203bf4">https://juejin.im/post/5d8da403f265da5b5d203bf4</a></p>
+</blockquote>
+<h3 id="限期等待（TimeWaiting）"><a href="#限期等待（TimeWaiting）" class="headerlink" title="限期等待（TimeWaiting）"></a>限期等待（TimeWaiting）</h3><p>处于限期等待的线程，CPU同样不会分配时间片，但存在于限期等待的线程无需被其它线程显式唤醒，而是在等待时间结束后，系统自动唤醒。以下操作会造成线程限时等待：</p>
+<ol>
+<li>Thread.sleep()方法。</li>
+<li>设置了timeout参数的Object.wait()方法。</li>
+<li>设置了timeout参数的Thread.join()方法。</li>
+<li>LockSupport.parkNanos()方法。</li>
+<li>LockSupport.parkUntil()方法。</li>
+</ol>
+<h3 id="阻塞（Blocked）"><a href="#阻塞（Blocked）" class="headerlink" title="阻塞（Blocked）"></a>阻塞（Blocked）</h3><p>当多个线程进入同一块共享区域时，例如Synchronized块、ReentrantLock控制的区域等，会去整夺锁，成功获取锁的线程继续往下执行，而没有获取锁的线程将进入阻塞状态，等待获取锁。</p>
+<h3 id="结束（Terminated"><a href="#结束（Terminated" class="headerlink" title="结束（Terminated)"></a>结束（Terminated)</h3><p>已终止线程的线程状态，线程已结束执行。</p>
+<hr>
+<h2 id="Sleep和Wait的区别"><a href="#Sleep和Wait的区别" class="headerlink" title="Sleep和Wait的区别"></a>Sleep和Wait的区别</h2><p><strong>Sleep和Wait者两个方法都可以使线程进入限期等待的状态，那么这两个方法有什么区别呢？</strong></p>
+<ol>
+<li>sleep方法由Thread提供，而wait方法由Object提供。</li>
+<li>sleep方法可以在任何地方使用，而wait方法只能在synchronized块或synchronized方法中使用（因为必须获wait方法会释放锁，只有获取锁了才能释放锁）。</li>
+<li>sleep方法只会让出CPU，不会释放锁，而wait方法不仅会让出CPU，还会释放锁。</li>
+</ol>
+<p>测试代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">public class Main&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Thread threadA &#x3D; new Thread(new ThreadA());</span><br><span class="line">        Thread threadB &#x3D; new Thread(new ThreadB());</span><br><span class="line"></span><br><span class="line">        threadA.setName(&quot;threadA&quot;);</span><br><span class="line">        threadB.setName(&quot;threadB&quot;);</span><br><span class="line"></span><br><span class="line">        threadA.start();</span><br><span class="line">        threadB.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static synchronized void print() &#123;</span><br><span class="line">        System.out.println(&quot;当前线程:&quot;+Thread.currentThread().getName()+&quot;执行Sleep&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            Thread.sleep(1000);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            &#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;当前线程:&quot;+Thread.currentThread().getName()+&quot;执行Wait&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            Main.class.wait(1000);</span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            &#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(&quot;当前线程:&quot;+Thread.currentThread().getName()+&quot;执行完毕&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">class ThreadA implements Runnable&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">        Main.print();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">class ThreadB implements Runnable&#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void run() &#123;</span><br><span class="line">        &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">        Main.print();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpygbz3GqI4GVGCWFMk1GMib9U9R4MpBAjBlOnWynFe3KpdJK2svfCfU5Q/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>从上面的结果可以分析出：当线程A执行sleep后，等待一秒被唤醒后继续持有锁，执行之后的代码，而执行wait之后，立即释放了锁，不仅让出了CPU还让出了锁，而后线程B立即持有锁开始执行，和线程A执行了同样的步骤，当线程B执行wait方法之后，释放锁，然后线程A拿到锁打印了第一个执行完毕，然后线程B打印执行完毕。</p>
+<hr>
+<h2 id="notify和notifyAll的区别"><a href="#notify和notifyAll的区别" class="headerlink" title="notify和notifyAll的区别"></a>notify和notifyAll的区别</h2><h3 id="notify"><a href="#notify" class="headerlink" title="notify"></a>notify</h3><p>notify可以唤醒一个处于等待状态的线程，上代码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">public class Main&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Object lock &#x3D; new Object();</span><br><span class="line">        Thread threadA &#x3D; new Thread(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                synchronized (lock) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        &#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                    print();</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        Thread threadB &#x3D; new Thread(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                synchronized (lock) &#123;</span><br><span class="line">                    print();</span><br><span class="line">                    lock.notify();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        threadA.setName(&quot;threadA&quot;);</span><br><span class="line">        threadB.setName(&quot;threadB&quot;);</span><br><span class="line"></span><br><span class="line">        threadA.start();</span><br><span class="line">        threadB.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void print() &#123;</span><br><span class="line">            System.out.println(&quot;当前线程:&quot;+Thread.currentThread().getName()+&quot;执行print&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                Thread.sleep(1000);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                &#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(&quot;当前线程:&quot;+Thread.currentThread().getName()+&quot;执行完毕&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyL9UyhVticEWLM0L0BnVoXLwqliaBcJDwmCgZ3sCIvIoOHX6ooT0yEj3w/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p><strong>代码解释：</strong>线程A在开始执行时立即调用wait进入无限等待状态，如果没有别的线程来唤醒它，它将一直等待下去，所以此时B持有锁开始执行，并且在执行完毕时调用了notify方法，该方法可以唤醒wait状态的A线程，于是A线程苏醒，开始执行剩下的代码。</p>
+<h3 id="notifyAll"><a href="#notifyAll" class="headerlink" title="notifyAll"></a>notifyAll</h3><p>notifyAll可以用于唤醒所有等待的线程，使所有处于等待状态的线程都变为ready状态，去重新争夺锁。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">public class Main&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Object lock &#x3D; new Object();</span><br><span class="line">        Thread threadA &#x3D; new Thread(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                synchronized (lock) &#123;</span><br><span class="line">                    try &#123;</span><br><span class="line">                        lock.wait();</span><br><span class="line">                    &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                        &#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">                        e.printStackTrace();</span><br><span class="line">                    &#125;</span><br><span class="line">                    print();</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        Thread threadB &#x3D; new Thread(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                synchronized (lock) &#123;</span><br><span class="line">                    print();</span><br><span class="line">                    lock.notifyAll();</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        threadA.setName(&quot;threadA&quot;);</span><br><span class="line">        threadB.setName(&quot;threadB&quot;);</span><br><span class="line"></span><br><span class="line">        threadA.start();</span><br><span class="line">        threadB.start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void print() &#123;</span><br><span class="line">            System.out.println(&quot;当前线程:&quot;+Thread.currentThread().getName()+&quot;执行print&quot;);</span><br><span class="line">            try &#123;</span><br><span class="line">                Thread.sleep(1000);</span><br><span class="line">            &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                &#x2F;&#x2F; TODO Auto-generated catch block</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            System.out.println(&quot;当前线程:&quot;+Thread.currentThread().getName()+&quot;执行完毕&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行结果：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyyPemT0EUrvNzazicbjVTOxpDHBCoN2J7r0T30TW3CKWs59t9CAzMHvQ/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>要唤醒前一个例子中的线程A，不光notify方法可以做到，调用notifyAll方法同样也可以做到，那么两者有什么区别呢？</p>
+<h3 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h3><p>要说清楚他们的区别，首先要简单的说一下Java synchronized的一些原理，在openjdk中查看java的源码可以看到，java对象中存在monitor锁，monitor对象中包含锁池和等待池。</p>
+<p><strong>锁池</strong>，假设有多个对象进入synchronized块争夺锁，而此时已经有一个对象获取到了锁，那么剩余争夺锁的对象将直接进入锁池中。</p>
+<p><strong>等待池</strong>，假设某个线程调用了对象的wait方法，那么这个线程将直接进入等待池，而等待池中的对象不会去争夺锁，而是等待被唤醒。</p>
+<p>下面可以说notify和notifyAll的区别了：</p>
+<p><strong>notifyAll会让所有处于等待池中的线程全部进入锁池去争夺锁，而notify只会随机让其中一个线程去争夺锁。</strong></p>
+<hr>
+<h2 id="yield方法"><a href="#yield方法" class="headerlink" title="yield方法"></a>yield方法</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">    &#x2F;**</span><br><span class="line">     * A hint to the scheduler that the current thread is willing to yield</span><br><span class="line">     * its current use of a processor. The scheduler is free to ignore this</span><br><span class="line">     * hint.</span><br><span class="line">     *</span><br><span class="line">     * &lt;p&gt; Yield is a heuristic attempt to improve relative progression</span><br><span class="line">     * between threads that would otherwise over-utilise a CPU. Its use</span><br><span class="line">     * should be combined with detailed profiling and benchmarking to</span><br><span class="line">     * ensure that it actually has the desired effect.</span><br><span class="line">     *</span><br><span class="line">     * &lt;p&gt; It is rarely appropriate to use this method. It may be useful</span><br><span class="line">     * for debugging or testing purposes, where it may help to reproduce</span><br><span class="line">     * bugs due to race conditions. It may also be useful when designing</span><br><span class="line">     * concurrency control constructs such as the ones in the</span><br><span class="line">     * &#123;@link java.util.concurrent.locks&#125; package.</span><br><span class="line">     *&#x2F;</span><br><span class="line">    public static native void yield();</span><br></pre></td></tr></table></figure>
+
+<p>yield源码上有一段长长的注释，其大意是说：<strong>当前线程调用yield方法时，会给当前线程调度器一个暗示，当前线程愿意让出CPU的使用，但是它的作用应结合详细的分析和测试来确保已经达到了预期的效果，因为调度器可能会无视这个暗示，使用这个方法是不那么合适的，或许在测试环境中使用它会比较好。</strong></p>
+<p>测试：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public class Main&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Thread threadA &#x3D; new Thread(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                System.out.println(&quot;ThreadA正在执行yield&quot;);</span><br><span class="line">                Thread.yield();</span><br><span class="line">                System.out.println(&quot;ThreadA执行yield方法完成&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        Thread threadB &#x3D; new Thread(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                System.out.println(&quot;ThreadB正在执行yield&quot;);</span><br><span class="line">                Thread.yield();</span><br><span class="line">                System.out.println(&quot;ThreadB执行yield方法完成&quot;);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">        threadA.setName(&quot;threadA&quot;);</span><br><span class="line">        threadB.setName(&quot;threadB&quot;);</span><br><span class="line"></span><br><span class="line">        threadA.start();</span><br><span class="line">        threadB.start();</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果：</p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpyqpmCjEtIuqoVZIbF59NM8J94Mvw4pOEbYQbDGymzKDX5UFXibAVK57A/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p><img src="https://mmbiz.qpic.cn/mmbiz_png/eQPyBffYbucB92FfgfDV7SpOJ34bicSpy90HcnEVEoaVCicx0DGj6AGicGh7AnibUtXmZbn7NZwEM7Qdiay3VQC0T2A/640?wx_fmt=png&wxfrom=5&wx_lazy=1&wx_co=1"></p>
+<p>可以看出，存在不同的测试结果，这里选出两张。</p>
+<p><strong>第一种结果：</strong>线程A执行完yield方法，让出cpu给线程B执行。然后两个线程继续执行剩下的代码。</p>
+<p><strong>第二种结果：</strong>线程A执行yield方法，让出cpu给线程B执行，但是线程B执行yield方法后并没有让出cpu，而是继续往下执行，此时就是系统无视了这个暗示。</p>
+<hr>
+<h2 id="interrupt方法"><a href="#interrupt方法" class="headerlink" title="interrupt方法"></a>interrupt方法</h2><h3 id="中止线程"><a href="#中止线程" class="headerlink" title="中止线程"></a>中止线程</h3><p>interrupt函数可以中断一个线程，在interrupt之前，通常使用stop方法来终止一个线程，但是stop方法过于暴力，它的特点是，不论被中断的线程之前处于一个什么样的状态，都无条件中断，这会导致被中断的线程后续的一些清理工作无法顺利完成，引发一些不必要的异常和隐患，还有可能引发数据不同步的问题。</p>
+<h3 id="温柔的interrupt方法"><a href="#温柔的interrupt方法" class="headerlink" title="温柔的interrupt方法"></a>温柔的interrupt方法</h3><p>interrupt方法的原理与stop方法相比就显得温柔的多，当调用interrupt方法去终止一个线程时，它并不会暴力地强制终止线程，而是通知这个线程应该要被中断了，和yield一样，这也是一种暗示，至于是否应该中断，由被中断的线程自己去决定。当对一个线程调用interrupt方法时：</p>
+<ol>
+<li>如果该线程处于被阻塞状态，则立即退出阻塞状态，抛出InterruptedException异常。</li>
+<li>如果该线程处于running状态，则将该线程的中断标志位设置为true，被设置的线程继续运行，不受影响，当运行结束时由线程决定是否被中断。</li>
+</ol>
+<hr>
+<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><p>线程池的引入是用来解决在日常开发的多线程开发中，如果开发者需要使用到非常多的线程，那么这些线程在被频繁的创建和销毁时，会对系统造成一定的影响，有可能系统在创建和销毁这些线程所耗费的时间会比完成实际需求的时间还要长。</p>
+<p>另外，在线程很多的状况下，对线程的管理就形成了一个很大的问题，开发者通常要将注意力从功能上转移到对杂乱无章的线程进行管理上，这项动作实际上是非常耗费精力的。</p>
+<h3 id="利用Executors创建不同的线程池满足不同场景的需求"><a href="#利用Executors创建不同的线程池满足不同场景的需求" class="headerlink" title="利用Executors创建不同的线程池满足不同场景的需求"></a>利用Executors创建不同的线程池满足不同场景的需求</h3><p><code>newFixThreadPool(int nThreads)</code><br>指定工作线程数量的线程池。</p>
+<p><code>newCachedThreadPool()</code><br>处理大量中断事件工作任务的线程池，</p>
+<ol>
+<li>试图缓存线程并重用，当无缓存线程可用时，就会创建新的工作线程。</li>
+<li>如果线程闲置的时间超过阈值，则会被终止并移出缓存。</li>
+<li>系统长时间闲置的时候，不会消耗什么资源。</li>
+</ol>
+<p><code>newSingleThreadExecutor()</code><br>创建唯一的工作线程来执行任务，如果线程异常结束，会有另一个线程取代它。可保证顺序执行任务。</p>
+<p><code>newSingleThreadScheduledExecutor()与newScheduledThreadPool(int corePoolSize)</code><br>定时或周期性工作调度，两者的区别在于前者是单一工作线程，后者是多线程</p>
+<p><code>newWorkStealingPool()</code><br>内部构建ForkJoinPool，利用working-stealing算法，并行地处理任务，不保证处理顺序。</p>
+<p><strong>Fork/Join框架：</strong>把大任务分割称若干个小任务并行执行，最终汇总每个小任务后得到大任务结果的框架。</p>
+<h3 id="为什么要使用线程池"><a href="#为什么要使用线程池" class="headerlink" title="为什么要使用线程池"></a>为什么要使用线程池</h3><p>线程是稀缺资源，如果无限制地创建线程，会消耗系统资源，而线程池可以代替开发者管理线程，一个线程在结束运行后，不会销毁线程，而是将线程归还线程池，由线程池再进行管理，这样就可以对线程进行复用。</p>
+<p>所以线程池不但可以降低资源的消耗，还可以提高线程的可管理性。</p>
+<h3 id="使用线程池启动线程"><a href="#使用线程池启动线程" class="headerlink" title="使用线程池启动线程"></a>使用线程池启动线程</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">public class Main&#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ExecutorService newFixThreadPool &#x3D; Executors.newFixedThreadPool(10);</span><br><span class="line">        newFixThreadPool.execute(new Runnable() &#123;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            public void run() &#123;</span><br><span class="line">                &#x2F;&#x2F; TODO Auto-generated method stub</span><br><span class="line">                System.out.println(&quot;通过线程池启动线程成功&quot;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        newFixThreadPool.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="新任务execute执行后的判断"><a href="#新任务execute执行后的判断" class="headerlink" title="新任务execute执行后的判断"></a>新任务execute执行后的判断</h3><p>要知道这个点首先要先说说ThreadPoolExecutor的构造函数，其中有几个参数：</p>
+<ol>
+<li><strong>corePoolSize：</strong>核心线程数量。</li>
+<li><strong>maximumPoolSize：</strong>线程不够用时能创建的最大线程数。</li>
+<li><strong>workQueue：</strong>等待队列。</li>
+</ol>
+<p>那么新任务提交后会执行下列判断：</p>
+<ol>
+<li>如果运行的线程少于corePoolSize,则创建新线程来处理任务，即时线程池中的其它线程是空闲的。</li>
+<li>如果线程池中的数量大于等于corePoolSize且小于maximumPoolSize，则只有当workQueue满时，才创建新的线程去处理任务。</li>
+<li>如果设置的corePoolSize和maximumPoolSize相同，则创建的线程池大小是固定的，如果此时有新任务提交，若workQueue未满，则放入workQueue，等待被处理。</li>
+<li>如果运行的线程数大于等于maximumPoolSize，maximumPoolSize,这时如果workQueue已经满了，则通过handler所指定的策略来处理任务。</li>
+</ol>
+<h3 id="handler-线程池饱和策略"><a href="#handler-线程池饱和策略" class="headerlink" title="handler 线程池饱和策略"></a>handler 线程池饱和策略</h3><ul>
+<li>AbortPolicy:直接抛出异常，默认。</li>
+<li>CallerRunsPolicy:用调用者所在的线程来执行任务。</li>
+<li>DiscardOldestPolicy:丢弃队列中靠最前的任务，并执行当前任务。</li>
+<li>DiscardPolicy:直接丢弃任务</li>
+<li>自定义。</li>
+</ul>
+<h3 id="线程池的大小如何选定"><a href="#线程池的大小如何选定" class="headerlink" title="线程池的大小如何选定"></a>线程池的大小如何选定</h3><p>这个问题并不是什么秘密，在网上各大技术网站均有文章说明，我就拿一个最受认可的写上吧</p>
+<ul>
+<li>CPU密集型：线程数 = 核心数或者核心数+1</li>
+<li>IO密集型：线程数 = CPU核数*（1+平均等待时间/平均工作时间）</li>
+</ul>
+<p>当然这个也不能完全依赖这个公式，更多的是要依赖平时的经验来操作，这个公式也只是仅供参考而已。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2020/08/09/test/" data-id="ckdmtb82n00008as668jx4z0r" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2020/08/09/index/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Hello World</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/08/">August 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/08/09/test/">test</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/09/index/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2020/08/09/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2020 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
